@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HeartFrame — A Little Love Story</title>
+<style>
+:root{--pink:#ff8fbd;--rose:#ffd5e5;--lav:#c5b4ff;--ink:#25213f;--cream:#fffaf7;--muted:#77718c;--line:#eee5f0}
+*{box-sizing:border-box}body{margin:0;font-family:ui-rounded,"Trebuchet MS",system-ui,sans-serif;color:var(--ink);background:radial-gradient(ellipse at 8% 8%,#ffe0ed 0,transparent 28%),radial-gradient(ellipse at 95% 30%,#e5dcff 0,transparent 30%),linear-gradient(135deg,#fff7fa,#f5f0ff 55%,#fff8ee);min-height:100vh;overflow-x:hidden}
+header{display:flex;align-items:center;justify-content:space-between;padding:17px 5vw;background:#292440;color:white;gap:16px;flex-wrap:wrap;box-shadow:0 6px 24px #30264b20}
+.brand{font-size:1.35rem;font-weight:800;letter-spacing:.3px}.brand span{color:#ff9ec7}.tag{font-size:.9rem;color:#e4dff4}
+main{max-width:1320px;margin:25px auto;padding:0 20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.9fr);gap:22px}
+.panel{background:#ffffffd9;border:1px solid #ffffff;border-radius:25px;padding:22px;box-shadow:0 14px 38px #4b356d12,inset 0 1px #ffffffb8;margin-bottom:18px;backdrop-filter:blur(12px);transition:transform .25s,box-shadow .25s}.panel:hover{box-shadow:0 18px 44px #4b356d18,inset 0 1px #ffffffb8}
+h2{font-size:1.08rem;margin:0 0 16px}h3{font-size:.95rem;margin:16px 0 10px}.sub{color:var(--muted);font-size:.87rem;line-height:1.5}
+label{display:block;font-size:.85rem;font-weight:700;margin:12px 0 7px}input,textarea,select{font:inherit;width:100%;border:1px solid #e5dce9;border-radius:12px;padding:11px 12px;background:#fffdfd;color:var(--ink);outline:none}input:focus,textarea:focus,select:focus{border-color:var(--pink);box-shadow:0 0 0 3px #ffb6d42b}textarea{resize:vertical;min-height:86px}
+button{font:inherit;border:0;border-radius:14px;padding:11px 15px;cursor:pointer;transition:transform .2s,filter .2s,box-shadow .2s}button:focus-visible{outline:3px solid #d9b5ff;outline-offset:3px}button:hover{transform:translateY(-1px);filter:brightness(1.02)}.primary{background:linear-gradient(120deg,#ff83b2,#d5a5ff);color:#39223e;font-weight:800;box-shadow:0 7px 17px #e88bbd38}.primary:hover{box-shadow:0 10px 22px #e88bbd55}.secondary{background:#f5edf9;color:#514263}.row{display:flex;gap:9px;flex-wrap:wrap}.row>*{flex:1}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:#f6f0fa;border:1px solid #e9dced;color:#5e4d70;padding:8px 11px;font-size:.84rem}.chip.active{background:#ffe1ed;border-color:#ff9bc1;color:#7d3157}
+.templates{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.template{padding:0;overflow:hidden;border:2px solid transparent;background:white;text-align:left;color:var(--ink)}.template.active{border-color:#ff8fbd}.thumb{height:78px;display:grid;place-items:center;font-size:2rem;background:linear-gradient(135deg,#f8b7d2,#b4a6f8)}.template:nth-child(2) .thumb{background:linear-gradient(135deg,#ffe4b6,#ffb7d1)}.template:nth-child(3) .thumb{background:linear-gradient(135deg,#182448,#8a7cc4)}.template:nth-child(4) .thumb{background:linear-gradient(135deg,#ffd8e7,#ffb7a6)}.template:nth-child(5) .thumb{background:linear-gradient(135deg,#25213f,#7e82ca)}.template:nth-child(6) .thumb{background:linear-gradient(135deg,#c6f0eb,#cbb9ff)}.template span{display:block;padding:8px;font-size:.8rem}
+.previewWrap{position:sticky;top:14px;align-self:start}.stage{position:relative;aspect-ratio:9/16;max-height:590px;width:min(100%,365px);margin:0 auto;border:5px solid #ffffffb8;border-radius:29px;overflow:hidden;background:linear-gradient(160deg,#172348,#6c568e 65%,#f5a6c7);box-shadow:0 20px 50px #33234b38,0 0 0 1px #dfcde9;color:white;isolation:isolate;transition:background 1s}
+.stage:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 82%,#ffc0d95c,transparent 50%),linear-gradient(0deg,#17193488,transparent 60%);z-index:-1}
+.moon{position:absolute;right:12%;top:9%;font-size:2.7rem;filter:drop-shadow(0 0 15px #fff4bd)}.stars{position:absolute;inset:0;pointer-events:none}.star{position:absolute;color:#fff1c6;animation:twinkle 2s infinite alternate}.heart{position:absolute;bottom:-30px;animation:floatUp 7s linear infinite;opacity:.8}
+@keyframes twinkle{to{opacity:.35;transform:scale(.75)}}@keyframes floatUp{to{transform:translateY(-700px) rotate(35deg);opacity:0}}
+.flower{position:absolute;z-index:1;pointer-events:none;filter:drop-shadow(0 3px 5px #20172a44);animation:flowerDrift var(--dur,8s) ease-in-out infinite;transform-origin:center}
+@keyframes flowerDrift{0%,100%{transform:translate3d(0,0,0) rotate(-13deg) scale(.92)}50%{transform:translate3d(var(--sway,18px),-42px,0) rotate(18deg) scale(1.08)}}
+.petal{position:absolute;top:-35px;z-index:2;pointer-events:none;animation:petalFall var(--fall,9s) linear infinite;opacity:.9}
+@keyframes petalFall{0%{transform:translate3d(0,-30px,0) rotate(0deg);opacity:0}10%{opacity:.9}50%{transform:translate3d(35px,420px,0) rotate(240deg)}100%{transform:translate3d(-20px,900px,0) rotate(540deg);opacity:0}}
+.stage .flower{font-size:27px}.stage .petal{font-size:19px}
+.cartoonScene{position:absolute;left:0;right:0;bottom:8%;height:43%;z-index:3;pointer-events:none;overflow:hidden}
+.person{position:absolute;bottom:0;width:76px;height:155px;filter:drop-shadow(0 8px 5px #17132b30);transform-origin:50% 100%}
+.person.girl{left:18%;--skin:#f6c6a7;--hair:#3b2639;--shirt:#ffb6d0;--pants:#6d679c}
+.person.boy{left:65%;--skin:#efbd9b;--hair:#33263a;--shirt:#9bcdf4;--pants:#414a78;transform:scale(.94)}
+.person .head{position:absolute;left:18px;top:4px;width:43px;height:49px;border-radius:46% 46% 43% 43%;background:var(--skin);z-index:3;border:2px solid #3d2b3c}
+.person .hair{position:absolute;left:13px;top:0;width:52px;height:37px;background:var(--hair);border-radius:50% 50% 28% 24%;z-index:4}
+.person .hair:after{content:"";position:absolute;right:-1px;top:18px;width:15px;height:42px;border-radius:0 0 60% 40%;background:var(--hair)}
+.person .face{position:absolute;z-index:5;left:27px;top:24px;font-size:15px;letter-spacing:3px;color:#543444}
+.person .neck{position:absolute;left:33px;top:47px;width:15px;height:14px;background:var(--skin);z-index:2}
+.person .body{position:absolute;left:12px;top:54px;width:56px;height:58px;border:2px solid #443149;background:var(--shirt);border-radius:20px 20px 11px 11px;z-index:2}
+.person .arm{position:absolute;top:62px;width:15px;height:51px;background:var(--skin);border:2px solid #443149;border-radius:12px;z-index:1;transform-origin:top center}
+.person .arm.left{left:8px;transform:rotate(17deg)}.person .arm.right{right:5px;transform:rotate(-17deg)}
+.person .leg{position:absolute;top:104px;width:19px;height:43px;background:var(--pants);border:2px solid #443149;border-radius:9px 9px 7px 7px;z-index:1;transform-origin:top center}
+.person .leg.left{left:20px}.person .leg.right{right:18px}
+.person .shoe{position:absolute;bottom:1px;width:27px;height:11px;background:#fff0e9;border:2px solid #443149;border-radius:12px 12px 6px 6px;z-index:2}
+.person .shoe.left{left:10px}.person .shoe.right{right:7px}
+.person .head{animation:headNod 2.8s ease-in-out infinite alternate}
+.person .hair{animation:hairSway 3.2s ease-in-out infinite alternate}
+@keyframes headNod{to{transform:rotate(3deg) translateY(-2px)}}@keyframes hairSway{to{transform:rotate(-3deg)}}
+.stage.style-chibi .person{transform:scale(1.08);filter:drop-shadow(0 8px 8px #17132b44)}
+.stage.style-chibi .person .head{width:49px;height:54px;left:14px;border-radius:48%}
+.stage.style-dream .flower{filter:drop-shadow(0 0 9px #ffd7f0)}
+.stage.style-garden .cartoonScene{background:linear-gradient(0deg,#315c5366,transparent 65%);border-radius:50% 50% 0 0}
+.stage.style-pixel .person{image-rendering:pixelated;filter:drop-shadow(4px 4px 0 #302347)}
+.stage.style-pixel .flower{filter:none}
+.stage.style-storybook .stage{font-family:Georgia,serif}
+.blink{animation:blink 4s infinite}@keyframes blink{0%,45%,48%,100%{transform:scaleY(1)}46%,47%{transform:scaleY(.08)}}
+.person.walking .leg.left{animation:legWalk .28s infinite alternate}.person.walking .leg.right{animation:legWalk .28s infinite alternate-reverse}
+.person.walking .arm.left{animation:armWalk .28s infinite alternate}.person.walking .arm.right{animation:armWalk .28s infinite alternate-reverse}
+@keyframes legWalk{to{transform:rotate(24deg) translateY(-2px)}}@keyframes armWalk{to{transform:rotate(-24deg)}}
+.person.bob{animation:personBob .7s ease-in-out infinite alternate}@keyframes personBob{to{translate:0 -5px}}
+.roseProp{position:absolute;bottom:17%;left:49%;font-size:35px;z-index:4;opacity:0;transform:scale(.2) rotate(-40deg);transition:opacity .5s,transform .6s;filter:drop-shadow(0 5px 4px #2b203b44)}
+.roseProp.visible{opacity:1;transform:scale(1) rotate(0deg);animation:roseGlow 1.5s infinite alternate}
+@keyframes roseGlow{to{filter:drop-shadow(0 0 12px #ffb3d1)}}
+.loveLetter{position:absolute;left:50%;top:35%;width:66%;min-height:105px;transform:translate(-50%,20px) scale(.5);opacity:0;z-index:5;background:#fff4dc;border:2px solid #cda9a1;border-radius:8px 8px 13px 13px;color:#76516a;text-align:center;padding:15px 13px 12px;font:italic 15px/1.45 Georgia,serif;box-shadow:0 10px 30px #1e173b55;transition:opacity .7s,transform .7s;white-space:pre-wrap}
+.loveLetter:before{content:"♡";position:absolute;top:-16px;left:calc(50% - 16px);width:32px;height:32px;border-radius:50%;background:#ffbad3;color:#a34270;font:22px/32px sans-serif}
+.loveLetter.open{opacity:1;transform:translate(-50%,0) scale(1);animation:letterFloat 2.4s ease-in-out infinite alternate}
+@keyframes letterFloat{to{translate:0 -6px}}
+.storyCaption{position:absolute;left:7%;right:7%;bottom:3%;text-align:center;z-index:6;color:#fff4fb;font-size:12px;letter-spacing:.5px;text-shadow:0 2px 8px #21152f;opacity:0;transition:opacity .6s}
+.storyCaption.show{opacity:1}
+.stage.story-mode .sceneArt{opacity:.2;transform:scale(.8)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+.sceneArt{position:absolute;bottom:17%;left:0;right:0;text-align:center;font-size:5rem;filter:drop-shadow(0 7px 8px #21163255);animation:bob 3s ease-in-out infinite;transform-origin:50% 80%}@keyframes bob{50%{transform:translateY(-8px)}}
+.book{position:absolute;bottom:14%;left:50%;transform:translateX(-50%) rotate(-3deg);width:64%;height:22%;background:#fff1d8;border-radius:5px 14px 12px 5px;box-shadow:inset 8px 0 #dfc5a5,0 12px 25px #17152f66;color:#76546b;display:none;align-items:center;justify-content:center;text-align:center;padding:14px;font-family:Georgia,serif;font-style:italic;line-height:1.5}
+.copy{position:absolute;left:9%;right:9%;top:27%;text-align:center;text-shadow:0 2px 15px #17122d;white-space:pre-wrap}.copy .headline{font-family:Georgia,serif;font-size:clamp(1.45rem,4vw,2rem);font-style:italic;color:#ffe3ef;line-height:1.18}.copy .message{font-size:clamp(.83rem,2.4vw,1rem);line-height:1.55;margin-top:15px;color:#fff9ff}.stage.playing .copy{animation:fadeText 8s ease both}@keyframes fadeText{0%{opacity:0;transform:translateY(12px)}12%,82%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
+.stage.playing .sceneArt{animation:bob 2s ease-in-out infinite,appear 1s ease both}@keyframes appear{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+.controls{display:flex;justify-content:center;gap:9px;margin:14px 0 0;flex-wrap:wrap}.controls button{box-shadow:0 4px 14px #5d3b7710}.meter{height:5px;border-radius:9px;background:#eee4f1;overflow:hidden;margin-top:13px}.meter div{height:100%;width:0;background:linear-gradient(90deg,#ff8fbd,#bca7ff)}
+footer{text-align:center;padding:25px;color:#81758c;font-size:.82rem}
+@media(max-width:850px){main{grid-template-columns:1fr}.previewWrap{position:static}.stage{max-height:540px}.templates{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:430px){main{padding:0 12px;margin:14px auto}.panel{padding:16px}.templates{grid-template-columns:repeat(2,1fr)}header{padding:15px}}
+</style></head>
+<body>
+<header><div class="brand">♡ Heart<span>Frame</span></div><div class="tag">turn your feelings into a tiny, magical movie ✦</div></header>
+<main>
+<section>
+ <div class="panel">
+  <h2>🌷 Make something just for her</h2><p class="sub">Write what you wish you could say, choose a dreamy look, and watch it become a little love story.</p>
+  <label for="herName">Her name or nickname (optional)</label><input id="herName" placeholder="e.g. my sunshine" maxlength="40">
+  <label>Choose a scene</label><div class="templates" id="templates">
+   <button class="template active" data-scene="couple"><div class="thumb">🌅</div><span>Golden hour</span></button>
+   <button class="template" data-scene="letter"><div class="thumb">💌</div><span>Love letter</span></button>
+   <button class="template" data-scene="night"><div class="thumb">🌙</div><span>Starry night</span></button>
+   <button class="template" data-scene="flowers"><div class="thumb">🌷</div><span>Flower garden</span></button>
+   <button class="template" data-scene="pixel"><div class="thumb">🎮</div><span>Pixel romance</span></button>
+   <button class="template" data-scene="book"><div class="thumb">📖</div><span>Storybook</span></button>
+  </div>
+  <label for="title">Video title</label><input id="title" value="A little reminder for you ♡" maxlength="70">
+  <label for="message">Your message</label><textarea id="message" maxlength="260">You have this quiet way of making ordinary moments feel special. I hope you remember how lovely you are, even on the days you don't feel it. ♡</textarea>
+  <div class="row"><button class="secondary" id="compliment">✨ Sweet compliment</button><button class="secondary" id="poem">✍️ Write a tiny poem</button><button class="secondary" id="letter">💌 Love note</button></div>
+  <label for="music">Background music</label><div class="row"><select id="music"><option value="musicbox">Sweet music box</option><option value="dream">Dreamy night chimes</option><option value="piano">Gentle piano-like tones</option><option value="silent">No music</option></select><button class="secondary" id="musicToggle">♫ Play music</button></div>
+  <p class="sub">Music is generated in your browser, so no song file is needed. Keep the volume low for a soft atmosphere.</p>
+  <label for="bookText">A page from your little book (optional)</label><textarea id="bookText" maxlength="180" style="min-height:65px">Once upon a time, someone came along and made the world feel a little softer. That someone was you.</textarea>
+  <div class="row"><button class="secondary" id="toggleBook">📖 Show book page</button><button class="secondary" id="refresh">↻ Refresh preview</button></div>
+ </div>
+ <div class="panel">
+  <h2>🪄 Magic generators</h2>
+  <p class="sub">Create a fresh romantic template or let the animation director build a little scene for you.</p>
+  <div class="row"><button class="primary" id="templateGen">✨ Generate a template</button><button class="primary" id="animationGen">🎞️ Generate animation</button></div>
+  <label for="motionStyle">Animation style</label>
+  <select id="motionStyle"><option value="storybook">Magical storybook</option><option value="chibi">Cute chibi romance</option><option value="dream">Dreamy floating hearts</option><option value="garden">Enchanted flower garden</option><option value="pixel">Pixel-heart adventure</option></select>
+  <label for="ending">Ending scene</label>
+  <select id="ending"><option value="letter">Open a love letter</option><option value="rose">Give her a rose</option><option value="hearts">A sky full of hearts</option><option value="wish">Make a wish together</option></select>
+  <p class="sub" id="generatorStatus" aria-live="polite">Pick a style, then generate something magical. ✨</p>
+ </div>
+ <div class="panel"><h2>🎬 Your mini movie</h2><p class="sub">Play the animated preview, then record it as a video in real time. For the smoothest result, keep this tab open while recording.</p>
+  <label for="duration">Video length</label><select id="duration"><option value="15">15 seconds — short & sweet</option><option value="30" selected>30 seconds — little love story</option><option value="45">45 seconds — slow and dreamy</option></select>
+  <div class="row" style="margin-top:13px"><button class="primary" id="play">▶ Play animation</button><button class="primary" id="record">● Record video</button></div>
+  <div class="meter"><div id="progress"></div></div><p class="sub" id="status" aria-live="polite">Ready when you are ♡</p>
+ </div>
+</section>
+<section class="previewWrap"><div class="panel"><h2>💗 Live preview</h2>
+ <div class="stage" id="stage"><div class="stars" id="stars"></div><div id="flowerLayer" aria-hidden="true"></div><div class="moon" id="moon">☾</div>
+ <div class="cartoonScene" id="cartoonScene" aria-hidden="true">
+  <div class="person girl" id="girl"><div class="hair"></div><div class="head"></div><div class="face">•ᴗ•</div><div class="neck"></div><div class="body"></div><div class="arm left"></div><div class="arm right"></div><div class="leg left"></div><div class="leg right"></div><div class="shoe left"></div><div class="shoe right"></div></div>
+  <div class="person boy walking" id="boy"><div class="hair"></div><div class="head"></div><div class="face">•ᴗ•</div><div class="neck"></div><div class="body"></div><div class="arm left"></div><div class="arm right"></div><div class="leg left"></div><div class="leg right"></div><div class="shoe left"></div><div class="shoe right"></div></div>
+ </div><div class="roseProp" id="roseProp">🌹</div><div class="loveLetter" id="loveLetter">For you, with all my heart ♡</div><div class="storyCaption" id="storyCaption">a little story made just for you ♡</div><div class="copy"><div class="headline" id="outTitle">A little reminder for you ♡</div><div class="message" id="outMessage">You have this quiet way of making ordinary moments feel special.</div></div><div class="sceneArt" id="art">🫶🏻</div><div class="book" id="book">Once upon a time, someone came along and made the world feel a little softer.</div></div>
+ <div class="controls"><button class="secondary" id="restart">↻ Restart</button><button class="secondary" id="fullscreen">⛶ Full screen</button></div>
+ <p class="sub" style="text-align:center">A little thing made with a lot of heart. ♡</p>
+</div></section>
+</main><footer>Made with love, a little courage, and a whole lot of heart ♡</footer>
+<script>
+const $=id=>document.getElementById(id);let scene='couple',playing=false,raf=null,startAt=0,recording=null,stream=null,audioCtx=null,oscillators=[],musicOn=false,bookOn=false;
+let storyTimer=null;function storyTimersClear(){if(storyTimer){clearTimeout(storyTimer);storyTimer=null}}
+function resetStory(){storyTimersClear();$('stage').classList.remove('story-mode','style-storybook','style-chibi','style-dream','style-garden','style-pixel');$('flowerLayer').querySelectorAll('.flower').forEach((f,i)=>{if(i>=13)f.remove()});$('roseProp').textContent='🌹';$('girl').style.transition='';$('boy').style.transition='';$('girl').style.left='18%';$('boy').style.left='76%';$('girl').className='person girl';$('boy').className='person boy walking';$('roseProp').classList.remove('visible');$('loveLetter').classList.remove('open');$('storyCaption').classList.remove('show')}
+function startStory(){
+ resetStory();$('stage').classList.add('story-mode');
+ const style=$('motionStyle').value,ending=$('ending').value;
+ $('stage').classList.add('style-'+style);
+ $('storyCaption').textContent='a little magical story, made just for you ♡';$('storyCaption').classList.add('show');
+ $('boy').classList.add('walking');$('girl').classList.add('bob');
+ $('boy').style.transition='left 2.2s cubic-bezier(.2,.8,.2,1)';$('boy').style.left='42%';
+ $('girl').style.transition='left 2.2s ease-in-out';$('girl').style.left='22%';
+ storyTimer=setTimeout(()=>{
+  $('boy').classList.remove('walking');$('boy').classList.add('bob');
+  if(ending==='rose'){$('roseProp').classList.add('visible');$('storyCaption').textContent='a rose for the one who makes life bloom 🌹'}
+  else if(ending==='hearts'){$('storyCaption').textContent='if wishes were hearts, the sky would be full of you ♡';for(let i=0;i<12;i++){const h=document.createElement('span');h.className='flower';h.textContent='💗';h.style.left=(5+Math.random()*85)+'%';h.style.top=(10+Math.random()*55)+'%';h.style.setProperty('--dur',(3+Math.random()*3)+'s');$('flowerLayer').appendChild(h)}}
+  else if(ending==='wish'){$('roseProp').textContent='🌟';$('roseProp').classList.add('visible');$('storyCaption').textContent='close your eyes and make a little wish ✨'}
+  else {$('roseProp').classList.add('visible');$('storyCaption').textContent='a little flower, for someone special 🌹'}
+  storyTimer=setTimeout(()=>{
+   if(ending==='letter'){$('loveLetter').textContent=(($('herName').value.trim()?$('herName').value.trim()+',\n\n':'')+($('bookText').value.trim()||$('message').value)+'\n\n— with a little courage ♡');$('loveLetter').classList.add('open');$('storyCaption').textContent='some feelings are too lovely to keep hidden ♡'}
+   else {$('loveLetter').textContent=(($('herName').value.trim()?$('herName').value.trim()+',\n\n':'')+$('message').value+'\n\n♡');$('loveLetter').classList.add('open')}
+   storyTimer=setTimeout(()=>{$('storyCaption').textContent='you make the world feel softer ✨'},3000)
+  },1800)
+ },2200)
+}
+function seedFlowers(){
+ const layer=$('flowerLayer');layer.innerHTML='';
+ const blooms=['🌸','🌼','🌷','✿','❀','💮'];
+ for(let i=0;i<13;i++){
+  const f=document.createElement('span');f.className='flower';f.textContent=blooms[i%blooms.length];
+  f.style.left=(4+Math.random()*88)+'%';f.style.top=(14+Math.random()*72)+'%';
+  f.style.setProperty('--dur',(5+Math.random()*6)+'s');f.style.setProperty('--sway',(-24+Math.random()*48)+'px');
+  f.style.animationDelay=(-Math.random()*8)+'s';f.style.fontSize=(14+Math.random()*17)+'px';f.style.opacity=(.35+Math.random()*.5);
+  layer.appendChild(f);
+ }
+ for(let i=0;i<9;i++){
+  const f=document.createElement('span');f.className='petal';f.textContent=['🌸','🌷','✿'][i%3];
+  f.style.left=(Math.random()*95)+'%';f.style.setProperty('--fall',(7+Math.random()*8)+'s');
+  f.style.animationDelay=(-Math.random()*12)+'s';f.style.fontSize=(12+Math.random()*12)+'px';layer.appendChild(f);
+ }
+}
+const scenes={couple:{art:'🫶🏻',bg:'linear-gradient(160deg,#f5a6bd,#9b87ce 60%,#29345b)',moon:'☀️'},letter:{art:'💌',bg:'linear-gradient(160deg,#f8c7d8,#b9a2d8 65%,#55476e)',moon:'✦'},night:{art:'🌌',bg:'linear-gradient(160deg,#101b3d,#454a83 65%,#b38bbd)',moon:'☾'},flowers:{art:'💐',bg:'linear-gradient(160deg,#f6c6dc,#8eaf9b 65%,#465a68)',moon:'✿'},pixel:{art:'💖',bg:'linear-gradient(160deg,#202447,#655ba8 65%,#ef9bc3)',moon:'✦'},book:{art:'📚',bg:'linear-gradient(160deg,#26334f,#9c7fa7 65%,#f4c6cf)',moon:'☾'}};
+const poems=[
+'If the stars could write,\\nthey’d borrow your name.\\nIf the moon could blush,\\nyou’d be the reason why. ♡',
+'You are the pause\\nthat makes a busy world quiet,\\nthe little bit of light\\nI hope always finds you. ✨',
+'I may not have the perfect words,\\nor a sky full of roses to give,\\nbut I hope this small reminder\\nshows how beautifully you exist. 🌷'
+];
+const compliments=[
+'You make ordinary moments feel a little more magical. Never forget how special you are. ♡',
+'Your smile has a way of making even the longest day feel lighter. I hope life gives you a thousand reasons to smile.',
+'You are lovely in ways that go far beyond what a mirror could ever show. ✨',
+'If kindness had a favorite face, I think it would look a little like you. 🌷'
+];
+const notes=[
+'I don’t know if I say it enough, but I’m really glad the world let our paths cross. I hope today is gentle with you. ♡',
+'This is just a little note to remind you that someone out here thinks you’re pretty wonderful. That someone is me. 💌',
+'If today feels heavy, I hope you remember that you deserve softness, patience, and all the lovely things life can bring.'
+];
+function choose(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function update(){const name=$('herName').value.trim();$('outTitle').textContent=$('title').value||'A little reminder for you ♡';$('outMessage').textContent=(name?name+', ':'')+$('message').value;$('book').textContent=$('bookText').value;$('book').style.display=bookOn?'flex':'none';}
+function setScene(s){scene=s;document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.scene===s));const x=scenes[s];$('stage').style.background=x.bg;$('art').textContent=x.art;$('moon').textContent=x.moon;if(s==='book')bookOn=true;update()}
+$('templates').addEventListener('click',e=>{const b=e.target.closest('[data-scene]');if(b)setScene(b.dataset.scene)});
+['herName','title','message','bookText'].forEach(id=>$(id).addEventListener('input',update));
+$('compliment').onclick=()=>{$('message').value=choose(compliments);update()};
+$('poem').onclick=()=>{$('message').value=choose(poems);update()};
+$('letter').onclick=()=>{$('message').value=choose(notes);update()};
+$('toggleBook').onclick=()=>{bookOn=!bookOn;$('book').style.display=bookOn?'flex':'none';$('toggleBook').textContent=bookOn?'📖 Hide book page':'📖 Show book page'};
+$('refresh').onclick=update;
+for(let i=0;i<32;i++){const s=document.createElement('span');s.className='star';s.textContent=['✦','·','✧','♡'][i%4];s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.fontSize=(8+Math.random()*17)+'px';s.style.animationDelay=Math.random()*3+'s';$('stars').appendChild(s)}
+function stopAnimation(){playing=false;if(raf)cancelAnimationFrame(raf);resetStory();$('stage').classList.remove('playing');$('play').textContent='▶ Play animation';$('progress').style.width='0%'}
+function animate(){if(!playing)return;let dur=Number($('duration').value)*1000,p=Math.min(1,(performance.now()-startAt)/dur);$('progress').style.width=(p*100)+'%';if(p>=1){stopAnimation();$('status').textContent='That was your little love story. ♡';return}raf=requestAnimationFrame(animate)}
+function play(){stopAnimation();update();playing=true;startAt=performance.now();$('stage').classList.add('playing');$('play').textContent='Ⅱ Playing…';$('status').textContent='Your cartoon characters are bringing the little story to life…';startStory();animate()}
+$('play').onclick=play;$('restart').onclick=play;
+$('fullscreen').onclick=()=>{const el=$('stage');if(el.requestFullscreen)el.requestFullscreen()};
+function stopMusic(){oscillators.forEach(o=>{try{o.stop()}catch(e){}});oscillators=[];musicOn=false;$('musicToggle').textContent='♫ Play music'}
+function music(){if(musicOn){stopMusic();return}if($('music').value==='silent'){$('status').textContent='Music is set to silent.';return}const AC=window.AudioContext||window.webkitAudioContext;if(!AC){$('status').textContent='This browser does not support generated music.';return}audioCtx=audioCtx||new AC();audioCtx.resume();musicOn=true;$('musicToggle').textContent='Ⅱ Stop music';let notes=$('music').value==='dream'?[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46]:$('music').value==='piano'?[261.63,329.63,392,329.63,293.66,349.23,440,349.23]:[659.25,783.99,987.77,783.99,698.46,880,1046.5,880];let i=0;function tick(){if(!musicOn)return;let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=$('music').value==='piano'?'triangle':'sine';o.frequency.value=notes[i++%notes.length];g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.055,audioCtx.currentTime+.04);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.42);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.45);oscillators.push(o);setTimeout(tick,460)}tick()}
+$('musicToggle').onclick=music;$('music').onchange=()=>{if(musicOn){stopMusic();music()}};
+$('record').onclick=async()=>{if(recording&&recording.state==='recording'){recording.stop();$('record').textContent='● Record video';return}if(!('captureStream'in HTMLCanvasElement.prototype)){ // use browser screen capture fallback guidance
+ $('status').textContent='Video recording works in browsers that support screen capture. Try Chrome or Edge and allow screen sharing.';return}
+ // Render a self-contained animated canvas so the recording can be downloaded as WebM.
+ const canvas=document.createElement('canvas');canvas.width=720;canvas.height=1280;const ctx=canvas.getContext('2d');const dur=Number($('duration').value)*1000;const stream=canvas.captureStream(30);let chunks=[];try{recording=new MediaRecorder(stream,{mimeType:'video/webm'});}catch(e){recording=new MediaRecorder(stream)}
+ recording.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};recording.onstop=()=>{const blob=new Blob(chunks,{type:'video/webm'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='heartframe-love-story.webm';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);stream.getTracks().forEach(t=>t.stop());$('status').textContent='Your video is ready! Saved as a WebM file. ♡';$('record').textContent='● Record video'};
+ const start=performance.now();recording.start();$('record').textContent='■ Stop & save';$('status').textContent='Recording your animation… please keep this tab open.';function frame(now){let t=now-start,p=Math.min(1,t/dur),s=scenes[scene];let grad=ctx.createLinearGradient(0,0,720,1280);grad.addColorStop(0,s.bg.includes('linear')?'#172348':'#34254c');grad.addColorStop(.65,scene==='flowers'?'#7c9d8d':scene==='night'?'#444b83':'#9d7fc1');grad.addColorStop(1,'#f3a8c9');ctx.fillStyle=grad;ctx.fillRect(0,0,720,1280);ctx.fillStyle='#fff0c9';ctx.font='54px sans-serif';ctx.fillText(s.moon,540,170);for(let j=0;j<45;j++){ctx.globalAlpha=.35+Math.abs(Math.sin(now/500+j))*.65;ctx.fillText('✦',(j*137)%700,((j*197+now*.025)%1150)+30)}ctx.globalAlpha=1;// Floating flowers/petals are drawn into the saved video too.
+for(let k=0;k<11;k++){let xx=(k*83+Math.sin(now/850+k)*35+720)%720, yy=((k*151+now*(.035+k*.001))%1380)-40;ctx.globalAlpha=.25+Math.abs(Math.sin(now/650+k))*.55;ctx.font=(22+(k%3)*8)+'px sans-serif';ctx.fillText(['🌸','🌷','✿','💮'][k%4],xx,yy)}ctx.globalAlpha=1;
+ctx.textAlign='center';ctx.fillStyle='#ffe2ef';ctx.font='italic 56px Georgia';wrap(ctx,$('title').value||'A little reminder for you ♡',360,360,590,68);ctx.fillStyle='white';ctx.font='32px system-ui';wrap(ctx,($('herName').value.trim()?$('herName').value.trim()+', ':'')+$('message').value,360,540,570,49);ctx.font='130px sans-serif';ctx.fillText(s.art,360,920+Math.sin(now/400)*12);
+ // Simple cartoon couple with bobbing heads and swinging legs, drawn into the exported animation.
+ function drawPerson(px,py,shirt,hair,phase){let bob=Math.sin(now/180+phase)*5;ctx.save();ctx.translate(px,py+bob);ctx.lineWidth=5;ctx.strokeStyle='#392941';ctx.lineCap='round';
+ ctx.fillStyle=shirt;ctx.beginPath();ctx.roundRect(-29,22,58,63,18);ctx.fill();ctx.stroke();
+ ctx.fillStyle='#f3c4a5';ctx.beginPath();ctx.ellipse(0,0,23,27,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+ ctx.fillStyle=hair;ctx.beginPath();ctx.arc(0,-5,25,Math.PI,Math.PI*2);ctx.lineTo(24,10);ctx.quadraticCurveTo(18,25,14,19);ctx.lineTo(12,5);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#4b3143';ctx.beginPath();ctx.arc(-8,3,2.5,0,Math.PI*2);ctx.arc(8,3,2.5,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#4b3143';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,9,6,.15,Math.PI-.15);ctx.stroke();
+ ctx.strokeStyle='#f3c4a5';ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(-24,34);ctx.lineTo(-35+Math.sin(now/150+phase)*8,66);ctx.moveTo(24,34);ctx.lineTo(35-Math.sin(now/150+phase)*8,66);ctx.stroke();
+ ctx.strokeStyle='#454466';ctx.lineWidth=15;ctx.beginPath();ctx.moveTo(-13,82);ctx.lineTo(-16+Math.sin(now/150+phase)*8,118);ctx.moveTo(13,82);ctx.lineTo(16-Math.sin(now/150+phase)*8,118);ctx.stroke();ctx.restore()}
+ drawPerson(230,850,'#ffb6d0','#3b2639',0);drawPerson(480,850,'#9bcdf4','#33263a',1.5);
+ ctx.font='42px sans-serif';ctx.fillText('🌹',360,800+Math.sin(now/300)*7);
+ if(p>0.45){ctx.fillStyle='#fff4dc';ctx.strokeStyle='#d3a9a4';ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(135,440,450,165,12);ctx.fill();ctx.stroke();ctx.fillStyle='#76516a';ctx.font='italic 23px Georgia';wrap(ctx,$('herName').value.trim()||'For you,',360,485,390,30);wrap(ctx,$('message').value,360,525,390,27);ctx.textAlign='start'}
+ if(bookOn){ctx.fillStyle='#fff0d9';ctx.fillRect(145,980,430,170);ctx.fillStyle='#73566e';ctx.font='italic 22px Georgia';wrap(ctx,$('bookText').value,360,1025,365,31)}ctx.textAlign='start';if(t<dur&&recording&&recording.state==='recording')requestAnimationFrame(frame);else if(recording&&recording.state==='recording')recording.stop()}requestAnimationFrame(frame)};
+function wrap(ctx,text,x,y,maxWidth,lineHeight){let words=text.split(/\s+/),line='',yy=y;for(let n=0;n<words.length;n++){let test=line+words[n]+' ';if(ctx.measureText(test).width>maxWidth&&line){ctx.fillText(line.trim(),x,yy);line=words[n]+' ';yy+=lineHeight}else line=test}if(line)ctx.fillText(line.trim(),x,yy)}
+
+const generatedTitles=[
+ 'A tiny universe, just for you ♡','A rose among a thousand stars','If the moon knew your name','A little magic called you','The prettiest part of my day','A letter wrapped in starlight'
+];
+const generatedMessages=[
+ 'If I could bottle up the peaceful feeling you bring, I would give you a little jar for every difficult day. You deserve that kind of gentle magic. ♡',
+ 'Some people make a place brighter just by being in it. You do that without even trying. Never forget how special you are. 🌷',
+ 'If the stars could write a poem, I think every line would find its way back to you. You make ordinary things feel enchanted. ✨',
+ 'I hope life is kind to your heart, that flowers find your path, and that you always have a reason to smile. You deserve lovely things. 💗',
+ 'Maybe I am not a poet, but I know this: the world feels a little softer whenever you are around. That is my favorite kind of magic. ♡'
+];
+const generatedBooks=[
+ 'In a garden beyond the moon, a little rose waited for the person who made every ordinary day feel like spring.',
+ 'The stars kept one tiny secret: somewhere in the world, there was a smile that could make the night feel warm.',
+ 'A shy little heart carried a letter through a field of flowers. It had only three words to say: you matter, always.'
+];
+$('templateGen').onclick=()=>{
+ const template=choose(['couple','letter','night','flowers','pixel','book']);setScene(template);
+ $('title').value=choose(generatedTitles);$('message').value=choose(generatedMessages);$('bookText').value=choose(generatedBooks);
+ $('motionStyle').value=choose(['storybook','chibi','dream','garden','pixel']);$('ending').value=choose(['letter','rose','hearts','wish']);
+ bookOn=template==='book'||Math.random()>.45;$('book').style.display=bookOn?'flex':'none';
+ update();$('generatorStatus').textContent='✨ A fresh '+template+' template is ready. Press Play Animation to see it come alive!';
+};
+$('animationGen').onclick=()=>{
+ $('motionStyle').value=choose(['storybook','chibi','dream','garden','pixel']);
+ $('ending').value=choose(['letter','rose','hearts','wish']);
+ $('message').value=choose(generatedMessages);$('bookText').value=choose(generatedBooks);
+ setScene(choose(['couple','letter','night','flowers','pixel','book']));
+ update();play();$('generatorStatus').textContent='🎞️ Your animation has been generated! Characters move, flowers float, and your ending scene appears.';
+};
+
+seedFlowers();update();
+</script></body></html>
